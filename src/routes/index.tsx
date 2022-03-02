@@ -33,7 +33,6 @@ export default function RootNavigation() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Users" component={UsersScreen} />
-        <Stack.Screen name="Map" component={UserMapScreen} />
         <Stack.Screen name="Webview" component={WebviewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
