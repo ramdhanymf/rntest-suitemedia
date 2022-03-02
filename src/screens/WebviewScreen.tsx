@@ -1,12 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 export default function WebviewScreen() {
   return (
-    <View>
-      <Text>WebviewScreen</Text>
+    <View style={styles.container}>
+      <WebView source={{ uri: 'https://suitmedia.com/' }} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
