@@ -1,12 +1,71 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
+import { Colors } from '../constants';
+import { UsersProps } from '../typings/screens';
 
-export default function UsersScreen() {
+export default function UsersScreen({ navigation }: UsersProps) {
+  const [mapActive, setMapActive] = useState(false);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => setMapActive(!mapActive)}>
+          {mapActive ? <Text>Map</Text> : <Text>List</Text>}
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, mapActive]);
+
   return (
-    <View>
-      <Text>UsersScreen</Text>
+    <View style={styles.container}>
+      {mapActive ? (
+        <View>
+          <Text>Map</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={[0, 1, 2]}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.cardContainer}>
+              <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.image} />
+              <View>
+                <Text style={styles.name}>first name</Text>
+                <Text style={styles.email}>email@email.com</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.WHITE,
+    borderBottomWidth: 0.8,
+    borderBottomColor: Colors.GREY_2,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  image: {
+    height: 50,
+    aspectRatio: 1,
+    borderRadius: 25,
+    marginRight: 20,
+  },
+  name: {
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  email: {
+    fontWeight: '400',
+    fontSize: 15,
+    color: Colors.GREY,
+  },
+});
