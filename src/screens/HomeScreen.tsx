@@ -1,27 +1,47 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { RNTestButton } from '../components';
 import { Colors } from '../constants';
+import UserContext from '../store';
 import { HomeProps } from '../typings/screens';
 
 export default function HomeScreen({ navigation }: HomeProps) {
+  const userContext = useContext(UserContext);
+
   return (
     <View style={styles.container}>
       <View style={styles.welcomeContainer}>
         <Text style={styles.welcome}>Welcome</Text>
-        <Text style={styles.name}>John Doe</Text>
+        {userContext?.user && (
+          <Text
+            style={
+              styles.name
+            }>{`${userContext?.user.first_name} ${userContext?.user.last_name}`}</Text>
+        )}
       </View>
 
-      <Image source={{ uri: 'https://picsum.photos/200' }} style={styles.profilePicture} />
+      <Image
+        source={{
+          uri: userContext?.user?.avatar ? userContext?.user?.avatar : 'https://picsum.photos/200',
+        }}
+        style={styles.profilePicture}
+      />
 
-      <Text style={styles.selectUser}>Select a user to show the profile</Text>
-      <View style={styles.userDetail}>
-        <Text style={styles.name}>John Doe</Text>
-        <Text style={styles.email}>email@email.com</Text>
-        <Text style={styles.website} onPress={() => navigation.navigate('Webview')}>
-          website
-        </Text>
-      </View>
+      {!userContext.user && (
+        <Text style={styles.selectUser}>Select a user to show the profile</Text>
+      )}
+      {userContext?.user && (
+        <View style={styles.userDetail}>
+          <Text
+            style={
+              styles.name
+            }>{`${userContext.user.first_name} ${userContext.user.last_name}`}</Text>
+          <Text style={styles.email}>{`${userContext.user.email}`}</Text>
+          <Text style={styles.website} onPress={() => navigation.navigate('Webview')}>
+            website
+          </Text>
+        </View>
+      )}
 
       <View style={styles.buttonContainer}>
         <RNTestButton label="Choose a User" onPress={() => navigation.navigate('Users')} />
