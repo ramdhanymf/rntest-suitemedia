@@ -1,10 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  Dimensions,
+} from 'react-native';
+import MapView, { LatLng, Marker } from 'react-native-maps';
 import { Colors } from '../constants';
 import { UsersProps } from '../typings/screens';
 
+const screen = Dimensions.get('window');
+
+const ASPECT_RATIO = screen.width / screen.height;
+const LATITUDE = 37.78825;
+const LONGITUDE = -122.4324;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export default function UsersScreen({ navigation }: UsersProps) {
   const [mapActive, setMapActive] = useState(false);
+
+  // const getRandomLocation = (from: number, to: number, fixed: number): LatLng => {
+  //   return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+  // };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,8 +40,29 @@ export default function UsersScreen({ navigation }: UsersProps) {
   return (
     <View style={styles.container}>
       {mapActive ? (
-        <View>
-          <Text>Map</Text>
+        <View style={{ flex: 1 }}>
+          <MapView
+            style={{ ...StyleSheet.absoluteFillObject }}
+            initialRegion={{
+              latitude: LATITUDE,
+              longitude: LONGITUDE,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            }}>
+            <Marker
+              coordinate={{
+                latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+                longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+              }}
+              onPress={() => console.log('marker 1')}
+            />
+            <Marker
+              coordinate={{
+                latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+                longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+              }}
+            />
+          </MapView>
         </View>
       ) : (
         <FlatList
