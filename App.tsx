@@ -8,11 +8,18 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import RootNavigation from './src/routes';
+import AppContext from './src/store';
 
 const App = () => {
-  return <RootNavigation />;
+  const [user, setUser] = useState<User | undefined>(undefined);
+
+  return (
+    <AppContext.Provider value={{ user, setUser }}>
+      <RootNavigation />
+    </AppContext.Provider>
+  );
 };
 
 export default App;
