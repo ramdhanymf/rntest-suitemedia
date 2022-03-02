@@ -9,7 +9,7 @@ export type RootStackNavigatorParams = {
 };
 
 export type LoginProps = NativeStackScreenProps<RootStackNavigatorParams, 'Login'>;
-export type Home = NativeStackScreenProps<RootStackNavigatorParams, 'Home'>;
-export type Users = NativeStackScreenProps<RootStackNavigatorParams, 'Users'>;
+export type HomeProps = NativeStackScreenProps<RootStackNavigatorParams, 'Home'>;
+export type UsersProps = NativeStackScreenProps<RootStackNavigatorParams, 'Users'>;
 export type WebviewProps = NativeStackScreenProps<RootStackNavigatorParams, 'Webview'>;
 export type MapProps = NativeStackScreenProps<RootStackNavigatorParams, 'Map'>;
