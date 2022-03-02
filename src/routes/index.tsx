@@ -9,6 +9,7 @@ import HomeScreen from '../screens/HomeScreen';
 import UserMapScreen from '../screens/UserMapScreen';
 import UsersScreen from '../screens/UsersScreen';
 import WebviewScreen from '../screens/WebviewScreen';
+import { Colors } from '../constants';
 
 const Stack = createNativeStackNavigator<RootStackNavigatorParams>();
 
@@ -16,7 +17,6 @@ export default function RootNavigation() {
   const setHeaderVisible = (route: RouteProp<RootStackNavigatorParams>) => {
     switch (route.name) {
       case 'Login':
-      case 'Home':
         return false;
       default:
         return true;
@@ -28,6 +28,7 @@ export default function RootNavigation() {
       <Stack.Navigator
         screenOptions={({ route }) => ({
           headerShown: setHeaderVisible(route),
+          headerTintColor: Colors.MAIN,
         })}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
