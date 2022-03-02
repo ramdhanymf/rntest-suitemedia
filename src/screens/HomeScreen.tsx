@@ -26,9 +26,10 @@ export default function HomeScreen({ navigation, route }: HomeProps) {
         style={styles.profilePicture}
       />
 
-      {!userContext.user && (
+      {!userContext?.user && (
         <Text style={styles.selectUser}>Select a user to show the profile</Text>
       )}
+
       {userContext?.user && (
         <View style={styles.userDetail}>
           <Text

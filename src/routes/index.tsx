@@ -6,7 +6,6 @@ import { RootStackNavigatorParams } from '../typings/screens';
 // screens
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
-import UserMapScreen from '../screens/UserMapScreen';
 import UsersScreen from '../screens/UsersScreen';
 import WebviewScreen from '../screens/WebviewScreen';
 import { Colors } from '../constants';
