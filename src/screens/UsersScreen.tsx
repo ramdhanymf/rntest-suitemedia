@@ -47,7 +47,11 @@ export default function UsersScreen({ navigation }: UsersProps) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={() => setMapActive(!mapActive)}>
-          {mapActive ? <Text>Map</Text> : <Text>List</Text>}
+          <Image
+            source={
+              mapActive ? require('../assets/marker-green.png') : require('../assets/list.png')
+            }
+          />
         </TouchableOpacity>
       ),
     });
@@ -105,8 +109,8 @@ export default function UsersScreen({ navigation }: UsersProps) {
     fetchMoreData();
   };
 
-  const setSelectedUser = async (selectedUser: User) => {
-    await userContext?.setUser(selectedUser);
+  const setSelectedUser = () => {
+    userContext?.setUser(user);
     navigation.goBack();
   };
 
@@ -115,40 +119,39 @@ export default function UsersScreen({ navigation }: UsersProps) {
   }, []);
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color={Colors.MAIN} />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.MAIN} />
+      </View>
+    );
   } else {
     return (
       <View style={styles.container}>
         {mapActive ? (
-          <View style={{ flex: 1 }}>
-            <MapView
-              style={{ ...StyleSheet.absoluteFillObject }}
-              initialRegion={{
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              }}
-              onPress={() => bottomSheetRef.current?.close()}>
-              {users.map(individual => (
-                <Marker
-                  key={individual.id.toString()}
-                  coordinate={{
-                    latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
-                    longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
-                  }}
-                  onPress={() => {
-                    setUser(individual);
-                    bottomSheetRef.current?.snapToIndex(0);
-                  }}>
-                  <Image
-                    source={require('../assets/marker.png')}
-                    style={{ height: 30, width: 30 }}
-                  />
-                </Marker>
-              ))}
-            </MapView>
-          </View>
+          <MapView
+            style={{ ...StyleSheet.absoluteFillObject }}
+            initialRegion={{
+              latitude: LATITUDE,
+              longitude: LONGITUDE,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            }}
+            onPress={() => bottomSheetRef.current?.close()}>
+            {users.map(individual => (
+              <Marker
+                key={individual.id.toString()}
+                coordinate={{
+                  latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+                  longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+                }}
+                onPress={() => {
+                  setUser(individual);
+                  bottomSheetRef.current?.snapToIndex(0);
+                }}>
+                <Image source={require('../assets/marker.png')} style={styles.marker} />
+              </Marker>
+            ))}
+          </MapView>
         ) : (
           <FlatList
             data={users}
@@ -168,7 +171,7 @@ export default function UsersScreen({ navigation }: UsersProps) {
             renderItem={({ item }) => (
               <TouchableOpacity style={styles.cardContainer} onPress={() => setSelectedUser(item)}>
                 <Image source={{ uri: item.avatar }} style={styles.image} />
-                <View style={{ marginLeft: 20 }}>
+                <View style={styles.detailUser}>
                   <Text style={styles.name}>{`${item.first_name} ${item.last_name}`}</Text>
                   <Text style={styles.email}>{`${item.email}`}</Text>
                 </View>
@@ -179,16 +182,11 @@ export default function UsersScreen({ navigation }: UsersProps) {
 
         <BottomSheet ref={bottomSheetRef} index={-1} snapPoints={snapPoints} detached={true}>
           <View style={[styles.bottomSheetContainer, { marginBottom: insets.bottom }]}>
-            <Image
-              source={{ uri: user?.avatar }}
-              style={{ height: 100, aspectRatio: 1, borderRadius: 50 }}
-            />
-            <Text style={{ fontWeight: '400', fontSize: 18, marginTop: 10 }}>
-              Firstname Lastname
-            </Text>
+            <Image source={{ uri: user?.avatar }} style={styles.imageSheet} />
+            <Text style={styles.nameSheet}>{`${user?.first_name} ${user?.last_name}`}</Text>
             <RNTestButton
               label="Select"
-              buttonStyle={{ marginTop: 20, marginBottom: 10 }}
+              buttonStyle={styles.selectButton}
               onPress={setSelectedUser}
             />
           </View>
@@ -201,6 +199,11 @@ export default function UsersScreen({ navigation }: UsersProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardContainer: {
     flexDirection: 'row',
@@ -230,5 +233,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  marker: {
+    height: 30,
+    width: 30,
+  },
+  detailUser: {
+    marginLeft: 20,
+  },
+  imageSheet: {
+    height: 100,
+    aspectRatio: 1,
+    borderRadius: 50,
+  },
+  selectButton: {
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  nameSheet: {
+    fontWeight: '400',
+    fontSize: 18,
+    marginTop: 10,
   },
 });
