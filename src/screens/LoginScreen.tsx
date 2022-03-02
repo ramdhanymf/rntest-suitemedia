@@ -14,6 +14,16 @@ export default function LoginScreen({ navigation }: LoginProps) {
     return reverseStr === lowerRegStr;
   };
 
+  const showAlert = () => {
+    const isPalindrome = checkPalindrome();
+
+    Alert.alert(
+      'Palindrome Checker',
+      isPalindrome ? `${palindrome} is palindrome` : `${palindrome} is not palindrome`,
+      [{ text: 'OK' }],
+    );
+  };
+
   return (
     <View style={styles.container}>
       <RNTestTextInput containerStyle={styles.textInput} placeholder="Name" />
@@ -26,7 +36,7 @@ export default function LoginScreen({ navigation }: LoginProps) {
 
       <View style={styles.seperator} />
 
-      <RNTestButton buttonStyle={styles.button} label="Check" onPress={checkPalindrome} />
+      <RNTestButton buttonStyle={styles.button} label="Check" onPress={showAlert} />
       <RNTestButton
         buttonStyle={styles.button}
         label="Next"
