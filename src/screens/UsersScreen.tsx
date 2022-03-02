@@ -23,10 +23,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 export default function UsersScreen({ navigation }: UsersProps) {
   const [mapActive, setMapActive] = useState(false);
 
-  // const getRandomLocation = (from: number, to: number, fixed: number): LatLng => {
-  //   return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
-  // };
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -49,19 +45,16 @@ export default function UsersScreen({ navigation }: UsersProps) {
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}>
-            <Marker
-              coordinate={{
-                latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
-                longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
-              }}
-              onPress={() => console.log('marker 1')}
-            />
-            <Marker
-              coordinate={{
-                latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
-                longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
-              }}
-            />
+            {[0, 1, 2].map(value => (
+              <Marker
+                coordinate={{
+                  latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+                  longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+                }}
+                onPress={() => console.log(`marker ${value}`)}>
+                <Image source={require('../assets/marker.png')} style={{ height: 30, width: 30 }} />
+              </Marker>
+            ))}
           </MapView>
         </View>
       ) : (
