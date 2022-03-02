@@ -16,9 +16,13 @@ export default function HomeScreen({ navigation, route }: HomeProps) {
       </View>
 
       <Image
-        source={{
-          uri: userContext?.user?.avatar ? userContext?.user?.avatar : 'https://picsum.photos/200',
-        }}
+        source={
+          userContext?.user?.avatar
+            ? {
+                uri: userContext?.user?.avatar,
+              }
+            : require('../assets/image-placeholder.png')
+        }
         style={styles.profilePicture}
       />
 
