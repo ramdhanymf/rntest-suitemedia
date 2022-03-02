@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type RootStackNavigatorParams = {
   Login: undefined;
-  Home: undefined;
+  Home: { name: string };
   Users: undefined;
   Webview: undefined;
   Map: undefined;

@@ -4,6 +4,7 @@ import { RNTestButton, RNTestTextInput } from '../components';
 import { LoginProps } from '../typings/screens';
 
 export default function LoginScreen({ navigation }: LoginProps) {
+  const [name, setName] = useState('');
   const [palindrome, setPalindrome] = useState('');
 
   const checkPalindrome = () => {
@@ -26,7 +27,12 @@ export default function LoginScreen({ navigation }: LoginProps) {
 
   return (
     <View style={styles.container}>
-      <RNTestTextInput containerStyle={styles.textInput} placeholder="Name" />
+      <RNTestTextInput
+        containerStyle={styles.textInput}
+        placeholder="Name"
+        onChangeText={value => setName(value)}
+        value={name}
+      />
       <RNTestTextInput
         containerStyle={styles.textInput}
         placeholder="Palindrome"
@@ -40,7 +46,7 @@ export default function LoginScreen({ navigation }: LoginProps) {
       <RNTestButton
         buttonStyle={styles.button}
         label="Next"
-        onPress={() => navigation.navigate('Home')}
+        onPress={() => navigation.navigate('Home', { name })}
       />
     </View>
   );

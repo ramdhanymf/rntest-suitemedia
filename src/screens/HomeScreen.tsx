@@ -5,19 +5,14 @@ import { Colors } from '../constants';
 import UserContext from '../store';
 import { HomeProps } from '../typings/screens';
 
-export default function HomeScreen({ navigation }: HomeProps) {
+export default function HomeScreen({ navigation, route }: HomeProps) {
   const userContext = useContext(UserContext);
 
   return (
     <View style={styles.container}>
       <View style={styles.welcomeContainer}>
         <Text style={styles.welcome}>Welcome</Text>
-        {userContext?.user && (
-          <Text
-            style={
-              styles.name
-            }>{`${userContext?.user.first_name} ${userContext?.user.last_name}`}</Text>
-        )}
+        <Text style={styles.name}>{route.params.name}</Text>
       </View>
 
       <Image
