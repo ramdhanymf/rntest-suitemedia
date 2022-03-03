@@ -19,7 +19,6 @@ import { UsersProps } from '../typings/screens';
 import { RNTestButton } from '../components';
 import API from '../configs/axios';
 import UserContext from '../store';
-import UserModel from '../entities/UserModel';
 
 const screen = Dimensions.get('window');
 
