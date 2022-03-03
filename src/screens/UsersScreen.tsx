@@ -9,6 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
   RefreshControl,
+  Animated,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MapView, { Marker } from 'react-native-maps';
@@ -18,6 +19,7 @@ import { UsersProps } from '../typings/screens';
 import { RNTestButton } from '../components';
 import API from '../configs/axios';
 import UserContext from '../store';
+import UserModel from '../entities/UserModel';
 
 const screen = Dimensions.get('window');
 
@@ -49,7 +51,7 @@ export default function UsersScreen({ navigation }: UsersProps) {
         <TouchableOpacity onPress={() => setMapActive(!mapActive)}>
           <Image
             source={
-              mapActive ? require('../assets/marker-green.png') : require('../assets/list.png')
+              mapActive ? require('../assets/list.png') : require('../assets/marker-green.png')
             }
           />
         </TouchableOpacity>
@@ -61,8 +63,16 @@ export default function UsersScreen({ navigation }: UsersProps) {
     try {
       setIsLoading(true);
 
-      const res = await API.get<{ data: Array<User> }>(`/users?page=${page}&per_page=10`);
-      setUsers(res.data.data);
+      const request = await API.get<{ data: Array<User> }>(`/users?page=${page}&per_page=10`);
+      const result = request.data.data.map(item => ({
+        ...item,
+        location: {
+          latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+          longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+        },
+      }));
+
+      setUsers(result);
     } catch (error) {
       console.log(error);
     } finally {
@@ -76,8 +86,16 @@ export default function UsersScreen({ navigation }: UsersProps) {
       setRefreshing(true);
       setPage(1);
 
-      const res = await API.get<{ data: Array<User> }>('/users?page=1&per_page=10');
-      setUsers(res.data.data);
+      const request = await API.get<{ data: Array<User> }>('/users?page=1&per_page=10');
+      const result = request.data.data.map(item => ({
+        ...item,
+        location: {
+          latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+          longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+        },
+      }));
+
+      setUsers(result);
     } catch (error) {
       console.log(error);
     } finally {
@@ -89,13 +107,20 @@ export default function UsersScreen({ navigation }: UsersProps) {
     try {
       setLoadMore(true);
 
-      const res = await API.get<{ data: Array<User> }>(`/users?page=${page + 1}&per_page=10`);
+      const request = await API.get<{ data: Array<User> }>(`/users?page=${page + 1}&per_page=10`);
+      const result = request.data.data.map(item => ({
+        ...item,
+        location: {
+          latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
+          longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
+        },
+      }));
 
-      if (res.data.data.length === 0) {
+      if (request.data.data.length === 0) {
         console.log('all loaded');
         setIsAllLoaded(true);
       }
-      setUsers([...users, ...res.data.data]);
+      setUsers([...users, ...result]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -109,8 +134,8 @@ export default function UsersScreen({ navigation }: UsersProps) {
     fetchMoreData();
   };
 
-  const setSelectedUser = () => {
-    userContext?.setUser(user);
+  const setSelectedUser = (selectedUser: User | undefined) => {
+    userContext?.setUser(selectedUser);
     navigation.goBack();
   };
 
@@ -140,10 +165,7 @@ export default function UsersScreen({ navigation }: UsersProps) {
             {users.map(individual => (
               <Marker
                 key={individual.id.toString()}
-                coordinate={{
-                  latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
-                  longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
-                }}
+                coordinate={individual.location}
                 onPress={() => {
                   setUser(individual);
                   bottomSheetRef.current?.snapToIndex(0);
@@ -187,7 +209,7 @@ export default function UsersScreen({ navigation }: UsersProps) {
             <RNTestButton
               label="Select"
               buttonStyle={styles.selectButton}
-              onPress={setSelectedUser}
+              onPress={() => setSelectedUser(user)}
             />
           </View>
         </BottomSheet>
